@@ -37,5 +37,8 @@ contains "CORS allows Idempotency-Key"             'Idempotency-Key' -X OPTIONS 
 contains "CORS exposes X-Correlation-Id"           'Access-Control-Expose-Headers: X-Correlation-Id' -X POST -H "Origin: $APP_ORIGIN" "$PROTECTED"
 contains "the installed iOS app is allowed"        'Access-Control-Allow-Origin: capacitor://localhost' -X POST -H 'Origin: capacitor://localhost' "$PROTECTED"
 absent   "an unknown origin gets no CORS grant"    'Access-Control-Allow-Origin' -X POST -H 'Origin: http://evil.example' "$PROTECTED"
+check    "owner sign-up needs no token"            503 -X POST "$BASE/api/v1/sagas/owner-onboarding"
+check    "reading a saga needs a token"            401 "$BASE/api/v1/sagas/35920dc9-bd55-41a0-8e41-5832377383e5"
+check    "internal operations are never routed"    404 -X POST -H 'Authorization: Bearer x' "$BASE/internal/v1/owners"
 
 exit $fail
