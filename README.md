@@ -50,7 +50,7 @@ opened right after `git pull`. Nobody edits another domain's file.
 
 ### How to start it
 
-As part of the platform, from `barber-saas-infra` (`./scripts/up.sh dev`), at
+As part of the platform, from `barber-saas-infra-postgres` (`./scripts/up.sh dev`), at
 `http://localhost:8000`. Alone:
 
 ```bash
