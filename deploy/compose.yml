@@ -1,4 +1,4 @@
-# This service only. barber-saas-infra includes this file to compose the platform.
+# This service only. barber-saas-infra-postgres includes this file to compose the platform.
 # The gateway is the only container published to the host (norm 5.6.1).
 services:
   api-gateway:
