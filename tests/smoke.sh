@@ -29,6 +29,8 @@ contains "404 uses the error envelope"             '"error":"NOT_FOUND"' "$BASE/
 check    "protected route without token is 401"    401 -X POST "$PROTECTED"
 contains "401 uses the error envelope"             '"error":"UNAUTHORIZED"' -X POST "$PROTECTED"
 check    "platform route without token is 401"     401 "$BASE/api/v1/platform/plans"
+check    "the inbox without token is 401"          401 "$BASE/api/v1/notifications"
+check    "events are never routed"                 404 -X POST -H 'Authorization: Bearer x' "$BASE/internal/v1/events"
 absent   "public plans need no token"              "a bearer token is required" "$BASE/api/v1/plans"
 check    "a service that is down is 503"           503 -X POST -H 'Authorization: Bearer x' "$PROTECTED"
 contains "503 uses the error envelope"             '"error":"SERVICE_UNAVAILABLE"' -X POST -H 'Authorization: Bearer x' "$PROTECTED"
