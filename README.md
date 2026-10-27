@@ -37,6 +37,7 @@ with the shared error envelope. It does **not** validate tokens: every service d
 ```
 nginx/nginx.conf                 global settings and the JSON access log
 nginx/conf.d/00-resolver.conf    per-request DNS: a service that is down does not take the gateway down
+nginx/conf.d/05-real-ip.conf     the real client behind Caddy, for the rate limit and the access log
 nginx/conf.d/10-security.conf    rate limits, CORS origins, correlation id, the credentials filter
 nginx/conf.d/20-server.conf      the server block and the gateway's own errors
 nginx/routes/<domain>.conf       ONE file per domain, owned by that domain's developer
