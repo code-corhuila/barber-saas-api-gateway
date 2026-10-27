@@ -45,4 +45,18 @@ check    "owner sign-up needs no token"            503 -X POST "$BASE/api/v1/sag
 check    "reading a saga needs a token"            401 "$BASE/api/v1/sagas/35920dc9-bd55-41a0-8e41-5832377383e5"
 check    "internal operations are never routed"    404 -X POST -H 'Authorization: Bearer x' "$BASE/internal/v1/owners"
 
+# Behind Caddy the rate limit counts the client Caddy names, not Caddy (05-real-ip.conf): one client
+# over the auth burst gets 429 while another client through the same proxy is still served.
+LOGIN="$BASE/api/v1/auth/login"
+burst=""
+for i in 1 2 3 4 5 6 7 8 9 10 11 12; do burst="$burst -o /dev/null $LOGIN?client=a"; done  # the auth burst is 5
+# shellcheck disable=SC2086
+codes=$(curl -s -Z --parallel-immediate -w '%{url} %{http_code}\n' \
+  -X POST -H 'X-Forwarded-For: 203.0.113.10' $burst \
+  --next -s -w '%{url} %{http_code}\n' -X POST -H 'X-Forwarded-For: 203.0.113.20' -o /dev/null "$LOGIN?client=b")
+if echo "$codes" | grep -q "client=a 429"
+then echo "  ok    a client over the burst is limited (429)"; else echo "  FAIL  a client over the burst is limited: no 429"; fail=1; fi
+if echo "$codes" | grep -q "client=b 503"
+then echo "  ok    another client behind the same proxy is served"; else echo "  FAIL  another client behind the same proxy is served: $(echo "$codes" | grep client=b)"; fail=1; fi
+
 exit $fail
