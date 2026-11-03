@@ -31,8 +31,8 @@ Full policy: `00-governance/branching-policy.md` in `barber-saas-docs`.
 The single entry point of the platform (annex F, norm 5.6): NGINX configuration, not code. It
 routes `/api/v1/<domain>/…` to each service, rejects a protected route that carries no
 `Authorization` header, applies rate limits and CORS for the BarberSaaS app (Capacitor and
-`ionic serve` origins, ADR-013), creates or keeps `X-Correlation-Id`, and answers its own errors
-with the shared error envelope. It does **not** validate tokens: every service does (norm 5.3.7).
+`ionic serve` origins, ADR-013), keeps `X-Correlation-Id` when it is a UUID or 32 hex characters
+(otherwise it creates one), and answers its own errors with the shared error envelope. It does **not** validate tokens: every service does (norm 5.3.7).
 
 ```
 nginx/nginx.conf                 global settings and the JSON access log
