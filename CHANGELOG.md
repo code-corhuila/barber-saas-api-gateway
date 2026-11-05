@@ -4,6 +4,33 @@ All notable changes to `barber-saas-api-gateway` are recorded here. The format f
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-11-05
+
+MVP 3 (corte 3): promoted from `develop` through `qa` with `git cherry-pick -x` (norm 10–11).
+
+User stories: code-corhuila/barber-saas-docs#124, code-corhuila/barber-saas-docs#127, code-corhuila/barber-saas-docs#130, code-corhuila/barber-saas-docs#155.
+
+### Added
+
+- **routes:** route the subscription, the payments and Wompi's events
+- **routes:** require a token for the user's own account
+- **routes:** route the public reviews list of appointment without a token
+- **routes:** route the simulated checkout without a token
+
+### Fixed
+
+- **security:** take the real client from X-Forwarded-For behind Caddy
+- **nginx:** keep the client's correlation id only when it is a uuid or 32 hex characters
+
+### Documentation
+
+- **readme:** explain which correlation ids the gateway keeps
+
+### Tests
+
+- **smoke:** rate-limit each client behind the same proxy on its own
+- **smoke:** check that a malformed correlation id is replaced and the error body stays json
+
 ## [2.0.0] - 2026-10-08
 
 MVP 2 (corte 2): first release of this repository to `main`, promoted from `develop` through `qa`
@@ -49,4 +76,5 @@ User stories: code-corhuila/barber-saas-docs#3, code-corhuila/barber-saas-docs#4
 - **env:** state that the gateway holds no secrets
 - use the new repository name barber-saas-infra-postgres
 
+[3.0.0]: https://github.com/code-corhuila/barber-saas-api-gateway/releases/tag/v3.0.0
 [2.0.0]: https://github.com/code-corhuila/barber-saas-api-gateway/releases/tag/v2.0.0
