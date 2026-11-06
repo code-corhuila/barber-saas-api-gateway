@@ -12,6 +12,7 @@ User stories: code-corhuila/barber-saas-docs#124, code-corhuila/barber-saas-docs
 
 ### Added
 
+- **security:** limit all clients together on the auth routes
 - **routes:** route the subscription, the payments and Wompi's events
 - **routes:** require a token for the user's own account
 - **routes:** route the public reviews list of appointment without a token
@@ -19,6 +20,7 @@ User stories: code-corhuila/barber-saas-docs#124, code-corhuila/barber-saas-docs
 
 ### Fixed
 
+- **log:** write the access log duration in milliseconds
 - **security:** take the real client from X-Forwarded-For behind Caddy
 - **nginx:** keep the client's correlation id only when it is a uuid or 32 hex characters
 
