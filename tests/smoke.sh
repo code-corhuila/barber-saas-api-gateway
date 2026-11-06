@@ -62,4 +62,15 @@ then echo "  ok    a client over the burst is limited (429)"; else echo "  FAIL 
 if echo "$codes" | grep -q "client=b 503"
 then echo "  ok    another client behind the same proxy is served"; else echo "  FAIL  another client behind the same proxy is served: $(echo "$codes" | grep client=b)"; fail=1; fi
 
+# All clients together are limited too (docs#155): each address sends one request, under its own limit,
+# and the flood still gets 429, never a 502.
+flood=$(seq 1 250 | while read -r i; do
+  printf 'next\nrequest = POST\nheader = "X-Forwarded-For: 198.18.0.%s"\noutput = /dev/null\nwrite-out = "%%{http_code}\\n"\nurl = "%s?client=flood"\n' "$i" "$LOGIN"
+done | curl -s -Z --parallel-immediate --parallel-max 250 -K - | sort | uniq -c)
+if echo "$flood" | grep -q ' 429$'
+then echo "  ok    a flood from many clients is limited (429)"; else echo "  FAIL  a flood from many clients: no 429"; fail=1; fi
+if echo "$flood" | grep -q ' 502$'
+then echo "  FAIL  the flood got a 502"; fail=1; else echo "  ok    the flood gets no 502"; fi
+sleep 2
+
 exit $fail
